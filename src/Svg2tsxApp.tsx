@@ -1,1 +1,7 @@
-export default function Svg2tsxApp() { return <div>Svg2tsx placeholder</div>; }
+"use client";
+
+import { SVGToTSXConverter } from "./components/SVGToTSXConverter";
+
+export default function Svg2tsxApp() {
+	return <SVGToTSXConverter />;
+}
