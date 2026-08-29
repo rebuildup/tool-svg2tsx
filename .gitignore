@@ -1,5 +1,6 @@
 node_modules/
 .DS_Store
+Thumbs.db
 *.log
 .env*
 !.env.example
@@ -9,3 +10,16 @@ dist/
 build/
 .next/
 out/
+
+# Project-local agent state (per init policy)
+.tmp/
+.reference/
+
+# Test / coverage
+coverage/
+*.lcov
+
+# Editor / OS temp
+*.swp
+*.swo
+*~
