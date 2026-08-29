@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { RawDOMContainer } from "../../../../external/ui/src/RawDOMContainer";
 import type {
 	ConversionResult,
 	ConversionSettings,
@@ -12,6 +11,7 @@ import { convertSVGToTSX } from "../utils/tsxConverter";
 import { ConversionSettingsPanel } from "./ConversionSettings";
 import { DownloadPanel } from "./DownloadPanel";
 import { PreviewPanel } from "./PreviewPanel";
+import { RawDOMContainer } from "./RawDOMContainer";
 import { SVGInput } from "./SVGInput";
 
 const defaultSettings: ConversionSettings = {
