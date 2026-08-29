@@ -27,15 +27,14 @@ function parseElement(element: Element): SVGElement {
 	const attributes: Record<string, string> = {};
 
 	// Convert attributes to object
-	for (let i = 0; i < element.attributes.length; i++) {
-		const attr = element.attributes[i];
+	for (const attr of Array.from(element.attributes)) {
 		attributes[attr.name] = attr.value;
 	}
 
 	// Parse children
 	const children: SVGElement[] = [];
-	for (let i = 0; i < element.children.length; i++) {
-		children.push(parseElement(element.children[i]));
+	for (const child of Array.from(element.children)) {
+		children.push(parseElement(child));
 	}
 
 	return {

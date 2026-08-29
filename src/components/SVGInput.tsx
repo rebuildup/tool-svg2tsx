@@ -161,11 +161,13 @@ export function SVGInput({ onSVGChange, currentInput }: SVGInputProps) {
 			{activeTab === "code" && (
 				<div>
 					<label
+						htmlFor="svg2tsx-input-code"
 						style={{ display: "block", marginBottom: "5px", fontSize: "13px" }}
 					>
 						SVGコード
 					</label>
 					<textarea
+						id="svg2tsx-input-code"
 						value={codeInput}
 						onChange={(e) => handleCodeChange(e.target.value)}
 						placeholder="<svg>...</svg>"
@@ -178,7 +180,6 @@ export function SVGInput({ onSVGChange, currentInput }: SVGInputProps) {
 							boxSizing: "border-box",
 							resize: "vertical",
 						}}
-						aria-label="SVGコードを入力"
 					/>
 				</div>
 			)}
@@ -186,12 +187,14 @@ export function SVGInput({ onSVGChange, currentInput }: SVGInputProps) {
 			{activeTab === "url" && (
 				<div>
 					<label
+						htmlFor="svg2tsx-input-url"
 						style={{ display: "block", marginBottom: "5px", fontSize: "13px" }}
 					>
 						SVG URL
 					</label>
 					<div style={{ display: "flex", gap: "8px" }}>
 						<input
+							id="svg2tsx-input-url"
 							type="url"
 							value={urlInput}
 							onChange={(e) => setUrlInput(e.target.value)}
@@ -201,7 +204,6 @@ export function SVGInput({ onSVGChange, currentInput }: SVGInputProps) {
 								padding: "4px 8px",
 								fontSize: "13px",
 							}}
-							aria-label="SVG URLを入力"
 						/>
 						<button
 							type="button"

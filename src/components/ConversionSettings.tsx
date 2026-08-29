@@ -211,7 +211,10 @@ export function ConversionSettingsPanel({
 								id="svg2tsx-indent-size"
 								value={settings.indentSize}
 								onChange={(e) =>
-									updateSetting("indentSize", parseInt(e.target.value, 10))
+									updateSetting(
+										"indentSize",
+										Number.parseInt(e.target.value, 10),
+									)
 								}
 								style={{
 									width: "100%",

@@ -52,12 +52,14 @@ export function DownloadPanel({
 			<div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
 				<div>
 					<label
+						htmlFor="svg2tsx-download-filename"
 						style={{ display: "block", fontSize: "12px", marginBottom: "3px" }}
 					>
 						ファイル名
 					</label>
 					<div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
 						<input
+							id="svg2tsx-download-filename"
 							type="text"
 							value={fileName}
 							onChange={(e) => setFileName(e.target.value)}

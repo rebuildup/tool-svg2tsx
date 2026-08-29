@@ -61,6 +61,7 @@ export function PreviewPanel({
 							}}
 						>
 							<div
+								// biome-ignore lint/security/noDangerouslySetInnerHtml: SVG content is sanitized via DOMPurify with USE_PROFILES: { svg: true, svgFilters: true } which strips scripts, event handlers, and external refs.
 								dangerouslySetInnerHTML={{
 									__html: DOMPurify.sanitize(svgInput.content, {
 										USE_PROFILES: { svg: true, svgFilters: true },

@@ -147,39 +147,45 @@ function convertElementToJSX(
 	return `${openTag}\n${childrenJSX}\n${closeTag}`;
 }
 
+function jsxAttributeFor(
+	jsxKey: string,
+	originalKey: string,
+	value: string,
+	settings: ConversionSettings,
+): string {
+	if (jsxKey === "className") {
+		return "className={props.className}";
+	}
+	if (jsxKey === "style") {
+		return "style={props.style}";
+	}
+	if (
+		settings.variableizeSizes &&
+		(jsxKey === "width" || jsxKey === "height")
+	) {
+		return `${jsxKey}={props.${jsxKey} || "${value}"}`;
+	}
+	if (settings.variableizeColors && isColorAttribute(originalKey)) {
+		return `${jsxKey}={props.color1 || "${value}"}`;
+	}
+	return `${jsxKey}="${value}"`;
+}
+
 function convertAttributes(
 	attributes: Record<string, string>,
 	settings: ConversionSettings,
 ): string[] {
 	const jsxAttributes: string[] = [];
 
-	Object.entries(attributes).forEach(([key, value]) => {
-		// Skip unnecessary attributes if optimization is enabled
+	for (const [key, value] of Object.entries(attributes)) {
 		if (settings.removeUnnecessaryAttributes && isUnnecessaryAttribute(key)) {
-			return;
+			continue;
 		}
+		jsxAttributes.push(
+			jsxAttributeFor(convertAttributeName(key), key, value, settings),
+		);
+	}
 
-		// Convert attribute names to JSX format
-		const jsxKey = convertAttributeName(key);
-
-		// Handle special cases
-		if (jsxKey === "className") {
-			jsxAttributes.push(`className={props.className}`);
-		} else if (jsxKey === "style") {
-			jsxAttributes.push(`style={props.style}`);
-		} else if (
-			settings.variableizeSizes &&
-			(jsxKey === "width" || jsxKey === "height")
-		) {
-			jsxAttributes.push(`${jsxKey}={props.${jsxKey} || "${value}"}`);
-		} else if (settings.variableizeColors && isColorAttribute(key)) {
-			jsxAttributes.push(`${jsxKey}={props.color1 || "${value}"}`);
-		} else {
-			jsxAttributes.push(`${jsxKey}="${value}"`);
-		}
-	});
-
-	// Add default props
 	if (!attributes.className) {
 		jsxAttributes.push("className={props.className}");
 	}
@@ -234,7 +240,7 @@ function extractColors(element: SVGElement): string[] {
 	const colors: Set<string> = new Set();
 
 	function extractFromElement(el: SVGElement) {
-		Object.entries(el.attributes).forEach(([key, value]) => {
+		for (const [key, value] of Object.entries(el.attributes)) {
 			if (
 				isColorAttribute(key) &&
 				value !== "none" &&
@@ -242,9 +248,11 @@ function extractColors(element: SVGElement): string[] {
 			) {
 				colors.add(value);
 			}
-		});
+		}
 
-		el.children.forEach(extractFromElement);
+		for (const child of el.children) {
+			extractFromElement(child);
+		}
 	}
 
 	extractFromElement(element);
@@ -263,18 +271,19 @@ function generateExport(
 
 function formatCode(code: string, settings: ConversionSettings): string {
 	const { indentSize, lineBreaks } = settings;
+	let result = code;
 
 	// Replace indentation
 	if (indentSize !== 2) {
 		const currentIndent = "  ";
 		const newIndent = " ".repeat(indentSize);
-		code = code.replace(new RegExp(currentIndent, "g"), newIndent);
+		result = result.replace(new RegExp(currentIndent, "g"), newIndent);
 	}
 
 	// Replace line breaks
 	if (lineBreaks === "crlf") {
-		code = code.replace(/\n/g, "\r\n");
+		result = result.replace(/\n/g, "\r\n");
 	}
 
-	return code;
+	return result;
 }
