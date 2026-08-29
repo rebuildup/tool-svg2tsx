@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { RawDOMContainer } from "../../../../external/ui/src/RawDOMContainer";
+import { RawDOMContainer } from "../../../../src/components/tools-ui/RawDOMContainer";
 import type {
 	ConversionResult,
 	ConversionSettings,
