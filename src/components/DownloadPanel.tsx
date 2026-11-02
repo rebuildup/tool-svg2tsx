@@ -15,7 +15,9 @@ export function DownloadPanel({
 	const [fileName, setFileName] = useState(
 		settings.componentName || "Component",
 	);
-	const [copySuccess, setCopySuccess] = useState(false);
+	const [copyStatus, setCopyStatus] = useState<"idle" | "copied" | "failed">(
+		"idle",
+	);
 
 	const handleDownload = () => {
 		if (!conversionResult?.success || !conversionResult.tsxCode) return;
@@ -31,16 +33,48 @@ export function DownloadPanel({
 		URL.revokeObjectURL(url);
 	};
 
+	// A sandboxed iframe without `allow-same-origin` has an opaque origin,
+	// where the async Clipboard API is unavailable or denied by permissions
+	// policy. `document.execCommand("copy")` still works there, so it is used
+	// as a fallback that keeps the feature usable.
+	const copyWithExecCommand = (text: string): boolean => {
+		const textarea = document.createElement("textarea");
+		textarea.value = text;
+		textarea.setAttribute("readonly", "");
+		textarea.style.position = "fixed";
+		textarea.style.opacity = "0";
+		document.body.appendChild(textarea);
+		textarea.select();
+		let copied = false;
+		try {
+			copied = document.execCommand("copy");
+		} catch {
+			copied = false;
+		}
+		textarea.remove();
+		return copied;
+	};
+
 	const handleCopy = async () => {
 		if (!conversionResult?.success || !conversionResult.tsxCode) return;
 
+		const text = conversionResult.tsxCode;
+		let copied = false;
+
 		try {
-			await navigator.clipboard.writeText(conversionResult.tsxCode);
-			setCopySuccess(true);
-			setTimeout(() => setCopySuccess(false), 2000);
+			await navigator.clipboard.writeText(text);
+			copied = true;
 		} catch (error) {
+			// Expected inside an opaque-origin iframe; fall back below.
 			console.error("Failed to copy to clipboard:", error);
 		}
+
+		if (!copied) {
+			copied = copyWithExecCommand(text);
+		}
+
+		setCopyStatus(copied ? "copied" : "failed");
+		setTimeout(() => setCopyStatus("idle"), 2000);
 	};
 
 	const isDisabled = !conversionResult?.success || !conversionResult.tsxCode;
@@ -95,7 +129,11 @@ export function DownloadPanel({
 						disabled={isDisabled}
 						style={{ padding: "4px 12px", fontSize: "13px" }}
 					>
-						{copySuccess ? "コピー完了" : "クリップボードにコピー"}
+						{copyStatus === "copied"
+							? "コピー完了"
+							: copyStatus === "failed"
+								? "コピー失敗"
+								: "クリップボードにコピー"}
 					</button>
 				</div>
 
