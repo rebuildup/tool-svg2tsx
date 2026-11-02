@@ -8,12 +8,23 @@
   "exports": {
     ".": "./src/index.ts"
   },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "type-check": "tsc --noEmit"
+  },
   "dependencies": {
+    "dompurify": "^3.4.17",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },
-  "peerDependencies": {
-    "next": "^16.3.0"
+  "devDependencies": {
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@vitejs/plugin-react": "^5.2.0",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.7"
   },
   "license": "MIT"
 }

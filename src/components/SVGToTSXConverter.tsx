@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { RawDOMContainer } from "../../../../src/components/tools-ui/RawDOMContainer";
 import type {
 	ConversionResult,
 	ConversionSettings,
@@ -9,6 +8,7 @@ import type {
 } from "../types";
 import { parseSVG, validateSVG } from "../utils/svgParser";
 import { convertSVGToTSX } from "../utils/tsxConverter";
+import { AppFrame } from "./AppFrame";
 import { ConversionSettingsPanel } from "./ConversionSettings";
 import { DownloadPanel } from "./DownloadPanel";
 import { PreviewPanel } from "./PreviewPanel";
@@ -84,14 +84,7 @@ export function SVGToTSXConverter() {
 	}, [svgInput?.content, settings]);
 
 	return (
-		<RawDOMContainer
-			title="SVG to TSX Converter"
-			breadcrumbs={[
-				{ label: "Home", href: "/" },
-				{ label: "Tools", href: "/tools" },
-				{ label: "SVG to TSX Converter" },
-			]}
-		>
+		<AppFrame title="SVG to TSX Converter">
 			<div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
 				<SVGInput onSVGChange={setSvgInput} currentInput={svgInput} />
 
@@ -115,6 +108,6 @@ export function SVGToTSXConverter() {
 					settings={settings}
 				/>
 			</div>
-		</RawDOMContainer>
+		</AppFrame>
 	);
 }
